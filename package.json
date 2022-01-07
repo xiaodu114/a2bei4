@@ -1,0 +1,29 @@
+{
+  "name": "a2bei4",
+  "version": "1.0.0",
+  "author": "xiaodu114",
+  "description": "整理收集一些基础性的JS方法，例如：判断数据类型、获取GUID、防抖、节流等",
+  "keywords": [
+    "a2bei4",
+    "数据类型",
+    "GUID",
+    "防抖",
+    "节流"
+  ],
+  "main": "index.js",
+  "unpkg": "dist/a2bei4.js",
+  "jsdelivr": "dist/a2bei4.js",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiaodu114/a2bei4.git"
+  },
+  "homepage": "https://github.com/xiaodu114/a2bei4",
+  "scripts": {
+    "c": "rollup -c",
+    "cw": "rollup -cw"
+  },
+  "devDependencies": {
+    "rollup": "^2.63.0"
+  }
+}

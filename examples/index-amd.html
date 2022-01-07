@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/requirejs"></script>
+</head>
+
+<body>
+    <script>
+        if (window.require) {
+            require(["../dist/a2bei4.js"], function (du) {
+                console.log(du);
+            }, function (error) {
+                console.log(error);
+            })
+        }
+        else {
+            alert("https://unpkg.com/requirejs  加载异常");
+        }
+    </script>
+</body>
+
+</html>

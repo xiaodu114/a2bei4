@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/systemjs/dist/system.js"></script>
+</head>
+
+<body>
+    <script>
+        if (window.System) {
+            System.import("../dist/a2bei4.js").then((result) => {
+                debugger;
+                console.log(result);
+            }).catch((err) => {
+                console.log(du);
+            });
+        }
+        else {
+            alert("https://unpkg.com/systemjs  加载异常");
+        }
+    </script>
+</body>
+
+</html>

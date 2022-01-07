@@ -1,0 +1,1 @@
+module.exports = require('./dist/a2bei4');

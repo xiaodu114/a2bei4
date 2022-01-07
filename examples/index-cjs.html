@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        fetch("../dist/a2bei4.js").then(response => {
+            if (response.ok) {
+                return response.text();
+            }
+        }).then(responseData => {
+            debugger;
+            let _fn = new Function("module", "exports", responseData);
+            let _module = {
+                exports: {}
+            };
+            _fn(_module, _module.exports);
+            let du = _module.exports;
+            console.log(du);
+        });
+    </script>
+</body>
+
+</html>

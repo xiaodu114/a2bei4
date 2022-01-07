@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../dist/a2bei4.js"></script>
+</head>
+
+<body>
+    <p>
+        本页面通过script标签的方式测试，其他方式请点击 <a href="./index-amd.html" target="_blank">AMD方式</a>、<a href="./index-cjs.html"
+            target="_blank">CommonJS方式</a>、<a href="./index-systemjs.html" target="_blank">SystemJS方式</a>
+    </p>
+    <p>
+        <button type="button" id="btn001">防抖测试</button>
+        <button type="button" id="btn002">节流立即执行测试</button>
+        <button type="button" id="btn003">节流不立即执行测试</button>
+    </p>
+    <script>
+        if (window.du) {
+            document.getElementById("btn001").addEventListener("click", du.utils.debounce(function () {
+                console.log("防抖测试，成功回调一次");
+            }, 3000));
+            document.getElementById("btn002").addEventListener("click", du.utils.throttle(function () {
+                console.log("节流立即执行测试，成功回调一次");
+            }, 3000));
+            document.getElementById("btn003").addEventListener("click", du.utils.throttle(function () {
+                console.log("节流不立即执行测试，成功回调一次");
+            }, 3000, false));
+        }
+        else {
+            alert(`src="../dist/a2bei4.js" 加载异常`);
+        }
+    </script>
+</body>
+
+</html>
