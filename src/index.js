@@ -166,4 +166,84 @@ export const utils = {
 
 //#endregion
 
+//#region node 扩展一些和node相关的方法
+
+/**
+ * 获取指定节点的前一个节点
+ * @param {Node} node 指定的节点
+ * @returns {Node | undefined}
+ */
+function getPreNode(node) {
+    if (!(node && node.parentNode && node.parentNode.childNodes)) return;
+    return node.parentNode.childNodes[[...node.parentNode.childNodes].findIndex(x => x === node) - 1];
+}
+
+/**
+ * 获取指定节点的后一个节点
+ * @param {Node} node 指定的节点
+ * @returns {Node | undefined}
+ */
+function getNextNode(node) {
+    if (!(node && node.parentNode && node.parentNode.childNodes)) return;
+    return node.parentNode.childNodes[[...node.parentNode.childNodes].findIndex(x => x === node) + 1];
+}
+
+/**
+ * 在指定节点的前面插入一个节点
+ * @param {Node} me 指定的节点
+ * @param {Node} node 插入的节点
+ */
+function insertBeforeMe(me, node) {
+    if (!me?.parentNode?.insertBefore) return;
+    me.parentNode.insertBefore(node, me);
+}
+
+/**
+ * 在指定节点的后面插入一个节点
+ * @param {Node} me 指定的节点
+ * @param {Node} node 插入的节点
+ */
+function insertAfterMe(me, node) {
+    if (!me?.parentNode?.insertBefore) return;
+    let meNextNode = getNextNode(me);
+    if (meNextNode) {
+        me.parentNode.insertBefore(node, meNextNode);
+    }
+    else {
+        me.parentNode.appendChild(node);
+    }
+}
+
+/**
+ * 判断是否是空白空格文本节点
+ * @param {Node} node 指定的节点
+ * @param {String} spaceCode 空格字符
+ * @returns {Boolean}
+ */
+function isSpaceTextNode(node, spaceCode) {
+    //  data nodeValue textContent wholeText
+    //  &nbsp; &ensp; &emsp; &thinsp; &zwnj; &zwj; 6种空白空格
+    return node?.nodeType === Node.TEXT_NODE && node.nodeValue === spaceCode;
+}
+
+/**
+ * 判断是否是空文本节点
+ * @param {Node} node 指定的节点
+ * @returns {Boolean}
+ */
+function isNullTextNode(node) {
+    return node?.nodeType === Node.TEXT_NODE && node.nodeValue.trim().length === 0;
+}
+
+export const node = {
+    getPreNode,
+    getNextNode,
+    insertBeforeMe,
+    insertAfterMe,
+    isSpaceTextNode,
+    isNullTextNode
+};
+
+//#endregion
+
 export const other = {};
