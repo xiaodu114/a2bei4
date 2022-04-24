@@ -21,14 +21,14 @@
      * 获取数据的类型
      * 应用场景：
      * 示例：
-     *      getDataType(null);=>"null"
-     *      getDataType(undefined);=>"undefined"
-     *      getDataType({});=>"object"
-     *      getDataType(function(){});=>"function"
+     *      utils_GetDataType(null);=>"null"
+     *      utils_GetDataType(undefined);=>"undefined"
+     *      utils_GetDataType({});=>"object"
+     *      utils_GetDataType(function(){});=>"function"
      * @param {any} obj 目标数据
      * @returns {String} 返回目标数据类型的小写形式
      */
-    function getDataType(obj) {
+    function utils_GetDataType(obj) {
         return Object.prototype.toString
             .call(obj)
             .replace(/^\[object\s(\w+)\]$/, "$1")
@@ -39,10 +39,10 @@
      * 获取一个GUID
      * 收集来源：《基于mvc的javascript web富应用开发》 书中介绍是Robert Kieffer写的，还留了网址 http://goo.gl/0b0hu 
      * 应用场景：
-     * 示例：getGUID();=>'AEFC9ABC-1396-494B-AB96-C35CA3C9F92F'
+     * 示例：utils_GetGUID();=>'AEFC9ABC-1396-494B-AB96-C35CA3C9F92F'
      * @returns {String} 返回一个GUID
      */
-    function getGUID() {
+    function utils_GetGUID() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
             let r = Math.random() * 16 | 0,
                 v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -56,11 +56,11 @@
      * 应用场景：
      * 示例：
      *      function fn1( a1 , b2 , p3 ){}
-     *      getFunctionArgNames(fn1); => ['a1', 'b2', 'p3']
+     *      utils_GetFunctionArgNames(fn1); => ['a1', 'b2', 'p3']
      * @param {Function} fn 目标函数
      * @returns {Array} 返回一个字符串数组
      */
-    function getFunctionArgNames(fn) {
+    function utils_GetFunctionArgNames(fn) {
         const FN_ARG_SPLIT = /,/,
             FN_ARG = /^\s*(_?)(\S+?)\1\s*$/,
             FN_ARGS = /^[^(]*\(\s*([^)]*)\)/m,
@@ -77,20 +77,36 @@
     }
 
     /**
-     * 防抖(debounce)
+     * 获取指定范围内的一个随机整数
+     * 应用场景：
+     * 示例：
+     * @param {Number} num1 
+     * @param {Number} num2 
+     * @returns {Number} 返回一个整数
+     */
+    function getInRangeInteger(num1, num2) {
+        num1 = Number.isInteger(num1) ? num1 : 0;
+        num2 = Number.isInteger(num2) ? num2 : 0;
+        if (num1 > num2)
+            [num1, num2] = [num2, num1];
+        return Math.round(Math.random() * (num2 - num1)) + num1;
+    }
+
+    /**
+     * 防抖(utils_Debounce)
      * 实现：在给定的时间段之后调用目标函数。如果在未超过给定的时间段内再次触发，则从新计时（也就是说之前的等待浪费了）。
      * 理解：如果你在给定的时间段内一直触发（就行缝纫机一样），那么前面的触发都是在浪费力气，只有最后一次是有效的（最后一次点击开始计时，经过给的时间段，触发目标函数）
      * 应用场景：
-     * 示例： debounce(function () { }, 2000);
+     * 示例： utils_Debounce(function () { }, 2000);
      * @param {Function} fn 
      * @param {Number} timeInterval 
      * @returns {Function} 返回一个方法
      */
-    function debounce(fn, timeInterval) {
-        if (getDataType(fn) !== "function") {
+    function utils_Debounce(fn, timeInterval) {
+        if (utils_GetDataType(fn) !== "function") {
             throw new Error("参数异常：fn必须是函数");
         }
-        if (getDataType(timeInterval) !== "number") {
+        if (utils_GetDataType(timeInterval) !== "number") {
             timeInterval = 1000;
         }
         let setTimeoutId = null;
@@ -104,23 +120,23 @@
     }
 
     /**
-     * 节流(throttle)——支持是否立即触发
+     * 节流(utils_Throttle)——支持是否立即触发
      * 实现：在给定的时间段之内只会调用目标函数一次。如果在未超过给定的时间段内再次触发，则直接返回。
-     * 理解：如果你在给定的时间段内一直触发（就行缝纫机一样），那么我也不像防抖(debounce)一样绝情，到了时间（给定的时间段）就会触发一次目标函数。也就是降频。
+     * 理解：如果你在给定的时间段内一直触发（就行缝纫机一样），那么我也不像防抖(utils_Debounce)一样绝情，到了时间（给定的时间段）就会触发一次目标函数。也就是降频。
      * 应用场景：
      * 示例： 
-     *      立即执行：   throttle(function () { }, 2000);
-     *      不立即执行： throttle(function () { }, 2000, false);
+     *      立即执行：   utils_Throttle(function () { }, 2000);
+     *      不立即执行： utils_Throttle(function () { }, 2000, false);
      * @param {*} fn
      * @param {*} timeInterval
      * @param {boolean} [immediate=true]
      * @returns {Function} 返回一个方法
      */
-    function throttle(fn, timeInterval, immediate = true) {
-        if (getDataType(fn) !== "function") {
+    function utils_Throttle(fn, timeInterval, immediate = true) {
+        if (utils_GetDataType(fn) !== "function") {
             throw new Error("参数异常：fn必须是函数");
         }
-        if (getDataType(timeInterval) !== "number") {
+        if (utils_GetDataType(timeInterval) !== "number") {
             timeInterval = 1000;
         }
         let setTimeoutId = null,
@@ -165,15 +181,317 @@
     }
 
     const utils = {
-        getDataType,
-        getGUID,
-        getFunctionArgNames,
-        debounce,
-        throttle,
+        getDataType: utils_GetDataType,
+        getGUID: utils_GetGUID,
+        getFunctionArgNames: utils_GetFunctionArgNames,
+        debounce: utils_Debounce,
+        throttle: utils_Throttle,
         array_Shuffle,
         array_MoveTo
     };
 
+    //#endregion
+
+    //#region  Date 扩展一些日期（Date）相关的方法
+
+    /**
+     * 转日期
+     * @param {Date|String} t
+     * @returns {Date} 返回日期
+     */
+    function date_ToDate(t) {
+        //let date1=new Date();
+        //console.log(Date.parse(date1)===date1.valueOf());		//	false
+        //console.log(Date.parse(date1.toISOString())===date1.valueOf());	//	true
+        let v = NaN;
+        if (utils_GetDataType(t) === "string") {
+            v = Date.parse(t) || Date.parse(t.replace(/-/g, '/')) || Date.parse(t.replace(/\//g, '-'));
+        }
+        else {
+            v = new Date(t).valueOf();
+        }
+        return new Date(v);
+    }
+
+    /**
+     * 判断是不是日期
+     * @param {any} t 
+     * @returns {Boolean} 返回true|false
+     */
+    function date_IsValid(t) {
+        return !isNaN(date_ToDate(t).valueOf());
+    }
+
+    /**
+     * 日期格式化
+     * @param {Date} targetDate 
+     * @param {String} format   格式
+     * @param {Object} option   配置项
+     * @returns 
+     */
+    function date_Format(targetDate, format, option) {
+        function getOrdinalNumber(num) {
+            //  https://byjus.com/maths/ordinal-numStrings/
+            switch (num) {
+                case 1:
+                case 21:
+                case 31: {
+                    return num + "st";
+                }
+                case 2:
+                case 22:
+                case 32: {
+                    return num + "nd";
+                }
+                case 3:
+                case 23:
+                case 33: {
+                    return num + "rd";
+                }
+                default: {
+                    return num + "th";
+                }
+            }
+        }
+        function getReplaceStr(key) {
+            return `--->${key}<---`;
+        }
+        const LANG = option?.lang ?? "zh-cn";
+        const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        const numStrings = numbers.map(x => x + "");
+        let monthObj = {}, weekObj = {}, quarterObj = {};
+        let getAmPm = null;
+        switch (LANG) {
+            case "zh-cn": {
+                let numbersCn = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"];
+                monthObj[3] = numStrings.map(x => x + "月");
+                monthObj[4] = monthObj[3];
+                monthObj[5] = numbersCn.map(x => x + "月");
+                weekObj[1] = ["7", ...numStrings.slice(0, 6)];
+                weekObj[2] = ["日", ...numbersCn.slice(0, 6)];
+                weekObj[3] = weekObj[2].map(x => "周" + x);
+                weekObj[4] = weekObj[3];
+                weekObj[5] = weekObj[2].map(x => "星期" + x);
+                quarterObj[2] = numStrings.slice(0, 4);
+                getAmPm = function (hour, minute, isLower) {
+                    let hm = hour * 100 + minute, retStr = "";
+                    if (hm < 600) {
+                        retStr = '凌晨';
+                    } else if (hm < 900) {
+                        retStr = '早上';
+                    } else if (hm < 1130) {
+                        retStr = '上午';
+                    } else if (hm < 1230) {
+                        retStr = '中午';
+                    } else if (hm < 1800) {
+                        retStr = '下午';
+                    } else {
+                        retStr = '晚上';
+                    }
+                    return retStr;
+                };
+                break;
+            }
+            case "en-us": {
+                monthObj[3] = numbers.map(getOrdinalNumber);
+                monthObj[4] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                monthObj[5] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                weekObj[1] = ["0", ...numStrings.slice(0, 6)];
+                weekObj[2] = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+                weekObj[3] = [0, ...numbers.slice(0, 6)].map(getOrdinalNumber);
+                weekObj[4] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+                weekObj[5] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                quarterObj[2] = numbers.slice(0, 4).map(getOrdinalNumber);
+                getAmPm = function (hour, minute, isLower) {
+                    if (isLower) {
+                        return _hour > 12 ? "pm" : "am";
+                    }
+                    return _hour > 12 ? "PM" : "AM";
+                };
+                break;
+            }
+        }
+
+        let _year = targetDate.getFullYear(),
+            _month = targetDate.getMonth(),
+            _date = targetDate.getDate(),
+            _day = targetDate.getDay(),
+            _hour = targetDate.getHours(),
+            _minute = targetDate.getMinutes(),
+            _second = targetDate.getSeconds(),
+            _millisecond = targetDate.getMilliseconds(),
+            _quarter = Math.floor((_month + 3) / 3);
+
+        let increaseIndex = Date.now(),
+            transferReplaceObj = {};
+        let o = {
+            //  年（Year）
+            "y+": function (counter) {
+                // y和yyy都返回完整年，例如：1990
+                let retStr = _year + "";
+                if (counter === 2) {
+                    retStr = retStr.slice(-2);
+                }
+                else if (counter > 4) {
+                    retStr = retStr.padStart(counter, "0");
+                }
+                return retStr;
+            },
+            //  月份（Month）返回值有英文字母（……）注意替换顺序
+            "M+": function (counter) {
+                let retStr = _month + 1 + "";
+                switch (counter) {
+                    case 2: {
+                        retStr = retStr.padStart(2, "0");
+                        break;
+                    }
+                    case 3:
+                    case 4:
+                    case 5: {
+                        retStr = getReplaceStr(increaseIndex);
+                        transferReplaceObj[retStr] = monthObj[counter][_month];
+                        break;
+                    }
+                }
+                return retStr;
+            },
+            //  日-天（Date）
+            "d+": function (counter) {
+                let retStr = _date + "", _dayOrder = Math.ceil((new Date(targetDate) - new Date(_year + "")) / (24 * 60 * 60 * 1000));
+                switch (counter) {
+                    case 2: {
+                        retStr = retStr.padStart(2, "0");
+                        break;
+                    }
+                    case 3: {
+                        retStr = _dayOrder + "";
+                        break;
+                    }
+                    case 4: {
+                        retStr = (_dayOrder + "").padStart(3, "0");
+                        break;
+                    }
+                }
+                return retStr;
+            },
+            //  小时（Hour）12小时制
+            "h+": function (counter) {
+                let retStr = _hour > 12 ? (_hour - 12 + "") : (_hour + "");
+                if (counter === 2) {
+                    retStr = retStr.padStart(2, "0");
+                }
+                return retStr;
+            },
+            //  小时（Hour）24小时制
+            "H+": function (counter) {
+                let retStr = _hour + "";
+                if (counter === 2) {
+                    retStr = retStr.padStart(2, "0");
+                }
+                return retStr;
+            },
+            //  分钟（Minute）
+            "m+": function (counter) {
+                let retStr = _minute + "";
+                if (counter === 2) {
+                    retStr = retStr.padStart(2, "0");
+                }
+                return retStr;
+            },
+            //  秒钟（Second）
+            "s+": function (counter) {
+                let retStr = _second + "";
+                if (counter === 2) {
+                    retStr = retStr.padStart(2, "0");
+                }
+                return retStr;
+            },
+            //  毫秒（Millisecond）
+            "S+": function (counter) {
+                let retStr = _millisecond + "";
+                if (counter === 3) {
+                    retStr = retStr.padStart(3, "0");
+                }
+                return retStr;
+            },
+            //  上/下午（am|pm）
+            "a+": function (counter) {
+                let retStr = getReplaceStr(increaseIndex);
+                transferReplaceObj[retStr] = getAmPm(_hour, _minute, true);
+                return retStr;
+            },
+            //  上/下午（AM|PM）
+            "A+": function (counter) {
+                let retStr = getReplaceStr(increaseIndex);
+                transferReplaceObj[retStr] = getAmPm(_hour, _minute);
+                return retStr;
+            },
+            //  星期几
+            "w+": function (counter) {
+                let retStr = _day + "";
+                switch (counter) {
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5: {
+                        retStr = getReplaceStr(increaseIndex);
+                        transferReplaceObj[retStr] = weekObj[counter][_day];
+                        break;
+                    }
+                }
+                return retStr;
+            },
+            //  季度
+            "Q+": function (counter) {
+                if (counter === 2) {
+                    return quarterObj[counter][_quarter - 1];
+                }
+                return _quarter + "";
+            },
+        };
+        for (const k in o) {
+            const arrayMatch = [...format.matchAll(new RegExp("(" + k + ")", "g"))];
+            if (Array.isArray(arrayMatch) && arrayMatch.length) {
+                arrayMatch.forEach((item) => {
+                    increaseIndex++;
+                    format = format.replace(item[0], o[k](item[0].length, item[0]));
+                });
+            }
+        }
+        for (const k in transferReplaceObj) {
+            if (Object.hasOwnProperty.call(transferReplaceObj, k)) {
+                format = format.replace(new RegExp("(" + k + ")", "g"), transferReplaceObj[k]);
+            }
+        }
+        return format;
+    }
+
+    /**
+     * 获取指定范围内的一个时间
+     * @param {Date} date1 起始时间
+     * @param {Date} date2 结束时间
+     * @returns {Date}
+     */
+    function date_GetInRangeDate(date1, date2) {
+        let v1 = date_ToDate(date1).valueOf(),
+            v2 = date_ToDate(date2).valueOf();
+        if (isNaN(v1) && isNaN(v2)) {
+            v1 = 0;
+            v2 = new Date().valueOf();
+        }
+        else {
+            if (isNaN(v1)) v1 = 0;
+            if (isNaN(v2)) v2 = 0;
+        }
+        return new Date(getInRangeInteger(Math.abs(v1 - v2)) + Math.min(v1, v2));
+    }
+    const date = {
+        toDate: date_ToDate,
+        isValid: date_IsValid,
+        format: date_Format,
+        getInRangeDate: date_GetInRangeDate,
+    };
     //#endregion
 
     //#region node 扩展一些和node相关的方法
@@ -183,7 +501,7 @@
      * @param {Node} node 指定的节点
      * @returns {Node | undefined}
      */
-    function getPreNode(node) {
+    function node_GetPreNode(node) {
         if (!(node && node.parentNode && node.parentNode.childNodes)) return;
         return node.parentNode.childNodes[[...node.parentNode.childNodes].findIndex(x => x === node) - 1];
     }
@@ -193,7 +511,7 @@
      * @param {Node} node 指定的节点
      * @returns {Node | undefined}
      */
-    function getNextNode(node) {
+    function node_GetNextNode(node) {
         if (!(node && node.parentNode && node.parentNode.childNodes)) return;
         return node.parentNode.childNodes[[...node.parentNode.childNodes].findIndex(x => x === node) + 1];
     }
@@ -203,7 +521,7 @@
      * @param {Node} me 指定的节点
      * @param {Node} node 插入的节点
      */
-    function insertBeforeMe(me, node) {
+    function node_InsertBeforeMe(me, node) {
         if (!me?.parentNode?.insertBefore) return;
         me.parentNode.insertBefore(node, me);
     }
@@ -213,9 +531,9 @@
      * @param {Node} me 指定的节点
      * @param {Node} node 插入的节点
      */
-    function insertAfterMe(me, node) {
+    function node_InsertAfterMe(me, node) {
         if (!me?.parentNode?.insertBefore) return;
-        let meNextNode = getNextNode(me);
+        let meNextNode = node_GetNextNode(me);
         if (meNextNode) {
             me.parentNode.insertBefore(node, meNextNode);
         }
@@ -230,7 +548,7 @@
      * @param {String} spaceCode 空格字符
      * @returns {Boolean}
      */
-    function isSpaceTextNode(node, spaceCode) {
+    function node_IsSpaceTextNode(node, spaceCode) {
         //  data nodeValue textContent wholeText
         //  &nbsp; &ensp; &emsp; &thinsp; &zwnj; &zwj; 6种空白空格
         return node?.nodeType === Node.TEXT_NODE && node.nodeValue === spaceCode;
@@ -241,23 +559,24 @@
      * @param {Node} node 指定的节点
      * @returns {Boolean}
      */
-    function isNullTextNode(node) {
+    function node_IsNullTextNode(node) {
         return node?.nodeType === Node.TEXT_NODE && node.nodeValue.trim().length === 0;
     }
 
     const node = {
-        getPreNode,
-        getNextNode,
-        insertBeforeMe,
-        insertAfterMe,
-        isSpaceTextNode,
-        isNullTextNode
+        getPreNode: node_GetPreNode,
+        getNextNode: node_GetNextNode,
+        insertBeforeMe: node_InsertBeforeMe,
+        insertAfterMe: node_InsertAfterMe,
+        isSpaceTextNode: node_IsSpaceTextNode,
+        isNullTextNode: node_IsNullTextNode
     };
 
     //#endregion
 
     const other = {};
 
+    exports.date = date;
     exports.node = node;
     exports.other = other;
     exports.utils = utils;
