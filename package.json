@@ -1,6 +1,6 @@
 {
   "name": "a2bei4",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "xiaodu114",
   "description": "整理收集一些基础性的JS方法，例如：判断数据类型、获取GUID、防抖、节流等",
   "keywords": [
