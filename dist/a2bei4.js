@@ -84,7 +84,7 @@
      * @param {Number} num2 
      * @returns {Number} 返回一个整数
      */
-    function getInRangeInteger(num1, num2) {
+    function utils_GetInRangeInteger(num1, num2) {
         num1 = Number.isInteger(num1) ? num1 : 0;
         num2 = Number.isInteger(num2) ? num2 : 0;
         if (num1 > num2)
@@ -184,6 +184,7 @@
         getDataType: utils_GetDataType,
         getGUID: utils_GetGUID,
         getFunctionArgNames: utils_GetFunctionArgNames,
+        getInRangeInteger: utils_GetInRangeInteger,
         debounce: utils_Debounce,
         throttle: utils_Throttle,
         array_Shuffle,
@@ -192,7 +193,7 @@
 
     //#endregion
 
-    //#region  Date 扩展一些日期（Date）相关的方法
+    //#region date 扩展一些日期（Date）相关的方法
 
     /**
      * 转日期
@@ -484,7 +485,7 @@
             if (isNaN(v1)) v1 = 0;
             if (isNaN(v2)) v2 = 0;
         }
-        return new Date(getInRangeInteger(Math.abs(v1 - v2)) + Math.min(v1, v2));
+        return new Date(utils_GetInRangeInteger(Math.abs(v1 - v2)) + Math.min(v1, v2));
     }
     const date = {
         toDate: date_ToDate,
@@ -494,7 +495,9 @@
     };
     //#endregion
 
-    //#region node 扩展一些和node相关的方法
+    //#region node 扩展一些和 Node 相关的方法
+
+    //  https://developer.mozilla.org/zh-CN/docs/Web/API/Node
 
     /**
      * 获取指定节点的前一个节点
@@ -574,8 +577,130 @@
 
     //#endregion
 
+    //#region 事件派发器
+
+    class MyEvent {
+
+        constructor(option) {
+            this.evtPool = {};
+
+            //  处理配置
+            //      1、是否需要跨页面监听
+            if (option?.crossPage) {
+                //  暂时在每个实例中监听；或者另一种实现方式是一个地方缓存着所有需要跨页面监听的实例，之后在回调方法中遍历实例触发
+                addEventListener("storage", (evt) => {
+                    //  evt.key     evt.newValue    evt.oldValue
+                    if (evt.key !== "___my-event-cross-page-transfer___") return;
+                    if (!evt.newValue) return;
+                    let transferEvtObj = null;
+                    try {
+                        transferEvtObj = JSON.parse(evt.newValue);
+                    } catch (error) {
+                        throw new Error(JSON.stringify(error));
+                    }
+                    if (!transferEvtObj?.evtName) return;
+                    //  中转触发跨页面的事件时不指定上下文
+                    this.emit(transferEvtObj.evtName, transferEvtObj.data);
+                });
+            }
+            //      ……  更多配置项等待添加
+        }
+
+        /**
+         * 实例方法之事件监听
+         * @param {String} name 事件名称 
+         * @param {Function} fn 回调方法
+         * @returns {String} 唯一标识（可以在事件销毁时使用）
+         * @memberof MyEvent
+         */
+        on(name, fn) {
+            //  flag：唯一标识。有两个用途：
+            //      1、相同的name和fn，多次监听
+            //      2、销毁时可以使用
+            let flag = Date.now().toString() + "_" + parseInt(Math.random() * 1e8).toString();
+            if (this.evtPool.hasOwnProperty(name)) {
+                this.evtPool[name].push({
+                    flag,
+                    fn
+                });
+            }
+            else {
+                this.evtPool[name] = [{
+                    flag,
+                    fn
+                }];
+            }
+            return flag;
+        }
+
+        /**
+         * 实例方法之事件注销
+         * @param {String} name              事件名称 
+         * @param {Function|String} fnOrFlag 监听时绑定的方法或者监听方法的返回值
+         * @returns
+         * @memberof MyEvent
+         */
+        off(name, fnOrFlag) {
+            if (!this.evtPool.hasOwnProperty(name)) return;
+            if (!(Array.isArray(this.evtPool[name]) && this.evtPool[name].length)) {
+                delete this.evtPool[name];
+                return;
+            }
+            let delIndexes = [];
+            if ((typeof fnOrFlag) === "function") {
+                this.evtPool[name].forEach((x, index) => {
+                    if (x.fn === fnOrFlag) {
+                        delIndexes.push(index);
+                    }
+                });
+            }
+            else {
+                let index = this.evtPool[name].findIndex(x => x.flag === fnOrFlag);
+                if (index >= 0) {
+                    delIndexes.push(index);
+                }
+            }
+            if (delIndexes.length) {
+                delIndexes.forEach(x => {
+                    this.evtPool[name].splice(x, 1);
+                });
+                if (this.evtPool[name].length === 0) {
+                    delete this.evtPool[name];
+                }
+            }
+        }
+
+        /**
+         * 实例方法之事件触发
+         * @param {String} name   事件名称 
+         * @param {any} data      数据
+         * @param {any} context   上下文
+         * @param {Object} option 配置项
+         * @returns
+         * @memberof MyEvent
+         */
+        emit(name, data, context, option) {
+            if (!(Array.isArray(this.evtPool[name]) && this.evtPool[name].length)) return;
+            [].forEach.call(this.evtPool[name], (item) => {
+                item.fn.call(context, data);
+            });
+            //  是否需要跨页面触发
+            if (option?.crossPage) {
+                localStorage.setItem("___my-event-cross-page-transfer___", JSON.stringify({
+                    evtName: name,
+                    data: data
+                }));
+                //  这里删除之后还会在触发一次（变化：由有到无），监听的时候做好判断
+                localStorage.removeItem("___my-event-cross-page-transfer___");
+            }
+        }
+    }
+
+    //#endregion
+
     const other = {};
 
+    exports.MyEvent = MyEvent;
     exports.date = date;
     exports.node = node;
     exports.other = other;

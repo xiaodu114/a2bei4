@@ -1,4 +1,5 @@
 //  yarn add rollup -D
+//  npm i rollup -D
 
 export default {
     input: './src/index.js',
