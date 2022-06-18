@@ -698,9 +698,49 @@
 
     //#endregion
 
+    //#region ID生成器 
+
+    class MyId {
+
+        #ts = Date.now();		//	时间戳
+        #sn = 0;				//	序号（保证同一客户端之间的唯一项）
+        #flag = "";			    //	客户端标识（保证不同客户端之间的唯一项）
+        #len = 5;				//	序号位长度（我的电脑测试，同一时间戳内可以for循环执行了1000次左右，没有一次超过3k，所以5位应该够用了）
+        //  测试代码
+        //  let obj = {[Date.now()]:[]}; try { for (let i = 0; i < 100000; i++) { obj[Date.now()].push(i); } } catch { console.log(obj[Object.getOwnPropertyNames(obj)[0]].length); }
+
+        constructor(option) {
+            if (option) {
+                if (typeof option.flag === "string") {
+                    this.#flag = option.flag;
+                }
+                if (Number.isSafeInteger(option.len) && len >= 0) {
+                    this.#len = option.len;
+                }
+            }
+        }
+
+        nextId() {
+            let ts = Date.now();
+            if (ts === this.#ts) {
+                this.#sn++;
+                if (this.#sn >= 10 ** this.#len) {
+                    console.log("长度不够用了！！！");
+                }
+            } else {
+                this.#sn = 0;
+                this.#ts = ts;
+            }
+            return ts.toString() + this.#flag + this.#sn.toString().padStart(this.#len, "0");
+        }
+    }
+
+    //#endregion
+
     const other = {};
 
     exports.MyEvent = MyEvent;
+    exports.MyId = MyId;
     exports.date = date;
     exports.node = node;
     exports.other = other;

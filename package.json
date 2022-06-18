@@ -1,8 +1,8 @@
 {
     "name": "a2bei4",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "author": "xiaodu114",
-    "description": "整理收集一些JS常用方法，utils；数组、日期、节点等的扩展方法；事件派发器（触发、监听）……",
+    "description": "整理收集一些JS常用方法，utils；数组、日期、节点等的扩展方法；事件派发器（触发、监听）;有序ID生成器……",
     "keywords": [
         "a2bei4",
         "utils",
@@ -22,7 +22,12 @@
         "事件监听",
         "event",
         "emit",
-        "pub/sub"
+        "pub/sub",
+        "MyId",
+        "id",
+        "only",
+        "orderly",
+        "auto-increment"
     ],
     "main": "index.js",
     "unpkg": "dist/a2bei4.js",
