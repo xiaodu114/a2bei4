@@ -83,6 +83,55 @@ function utils_GetInRangeInteger(num1, num2) {
 }
 
 /**
+ * 获取一个随机汉字
+ * @returns {String} 返回一个汉字
+ */
+function utils_GetZhLetter() {
+    return String.fromCharCode(utils_GetInRangeInteger(parseInt("4E00", 16), parseInt("9FA5", 16)));
+}
+
+/**
+ * 获取一个随机英文字母
+ * @param {String} type lower：小写   upper：大写
+ * @returns {String} 返回一个（大写或者小写）英文字母
+ */
+function utils_GetEnLetter(type) {
+    let num1 = 97,
+        num2 = 122;
+    switch (type) {
+        case "lower": {
+            break;
+        }
+        case "upper": {
+            num1 = 65;
+            num2 = 90;
+            break;
+        }
+        default: {
+            if ((Math.random() - 0.5) > 0) {
+                num1 = 65;
+                num2 = 90;
+            }
+        }
+    }
+    return String.fromCharCode(utils_GetInRangeInteger(num1, num2));
+}
+
+/**
+ * 获取指定长度的由随机汉字英文字母组成的字符串
+ * @param {Number} len 指定生成字符串的长度
+ * @returns {String} 返回一个字符串
+ */
+function utils_GetRandomZhOrEnStr(len) {
+    len = (Number.isInteger(len) && len > 0) ? len : 0;
+    let retStr = "";
+    for (let i = 0; i < len; i++) {
+        retStr += (Math.random() - 0.5) > 0 ? utils_GetZhLetter() : utils_GetEnLetter();
+    }
+    return retStr;
+}
+
+/**
  * 防抖(utils_Debounce)
  * 实现：在给定的时间段之后调用目标函数。如果在未超过给定的时间段内再次触发，则从新计时（也就是说之前的等待浪费了）。
  * 理解：如果你在给定的时间段内一直触发（就行缝纫机一样），那么前面的触发都是在浪费力气，只有最后一次是有效的（最后一次点击开始计时，经过给的时间段，触发目标函数）
@@ -175,6 +224,9 @@ export const utils = {
     getGUID: utils_GetGUID,
     getFunctionArgNames: utils_GetFunctionArgNames,
     getInRangeInteger: utils_GetInRangeInteger,
+    getZhLetter: utils_GetZhLetter,
+    getEnLetter: utils_GetEnLetter,
+    getRandomZhOrEnStr: utils_GetRandomZhOrEnStr,
     debounce: utils_Debounce,
     throttle: utils_Throttle,
     array_Shuffle,
@@ -476,7 +528,7 @@ function date_GetInRangeDate(date1, date2) {
         if (isNaN(v2)) v2 = 0;
     }
     return new Date(utils_GetInRangeInteger(Math.abs(v1 - v2)) + Math.min(v1, v2));
-};
+}
 
 export const date = {
     toDate: date_ToDate,
